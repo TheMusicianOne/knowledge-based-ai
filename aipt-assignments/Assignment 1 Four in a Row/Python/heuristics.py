@@ -237,31 +237,31 @@ class CustomHeuristic(Heuristic):
             max_in_row: int = 0
             for i in range(width):
                 for j in range(height):
-                    if state[i, j] != player_id:
+                    if state[i, j] != id:
                         continue
 
                     max_in_row = max(max_in_row, 1)
 
                     for x in range(1, width - i):
-                        if state[i + x, j] == player_id:
+                        if state[i + x, j] == id:
                             max_in_row = max(max_in_row, x + 1)
                         else:
                             break
 
                     for y in range(1, height - j):
-                        if state[i, j + y] == player_id:
+                        if state[i, j + y] == id:
                             max_in_row = max(max_in_row, y + 1)
                         else:
                             break
 
                     for d in range(1, min(width - i, height - j)):
-                        if state[i + d, j + d] == player_id:
+                        if state[i + d, j + d] == id:
                             max_in_row = max(max_in_row, d + 1)
                         else:
                             break
 
                     for a in range(1, min(width - i, j)):
-                        if state[i + a, j - a] == player_id:
+                        if state[i + a, j - a] == id:
                             max_in_row = max(max_in_row, a + 1)
                         else:
                             break

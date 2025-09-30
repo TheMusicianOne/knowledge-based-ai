@@ -1,0 +1,35 @@
+
+Report:
+    
+    Explanation of MinMax and Alpha-Beta Pruning is needed.
+
+    Probably (4/5)
+
+Coding/Implementation:
+    
+    Fix implementation mistakes.
+
+    Probably (6/7)
+
+Explaining and testing code:
+
+    Explanation of implementation is needed
+    Complexity comparison is needed
+    Experiments with different board sizes, values of N, search depths is needed
+
+    Right now 0 pts, probably (4/6) in the end
+
+Discussion:
+
+    Interpretation of results needed (after testing)
+    Draw a conclusion after that
+
+    Probably 2 points
+
+Bonus:
+
+    We have our own heuristics, 1 point extra
+
+Total: 17/20 expected? 15/20 = 7.5
+
+

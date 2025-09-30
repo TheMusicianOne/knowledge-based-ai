@@ -138,9 +138,10 @@ def get_players(game_n: int) -> List[PlayerController]:
     """
     heuristic1: Heuristic = CustomHeuristic(game_n)
     heuristic2: Heuristic = CustomHeuristic(game_n)
+    DEPTH = 6
 
-    player1: PlayerController = AlphaBetaPlayer(1, game_n,6, heuristic1)
-    player2: PlayerController = MinMaxPlayer(2, game_n,6, heuristic2)
+    player1: PlayerController = MinMaxPlayer(1, game_n,DEPTH, heuristic1)
+    player2: PlayerController = AlphaBetaPlayer(2, game_n,DEPTH, heuristic2)
 
     # TODO: Implement other PlayerControllers (MinMaxPlayer and AlphaBetaPlayer)
 
@@ -156,9 +157,9 @@ def get_players(game_n: int) -> List[PlayerController]:
 
 
 if __name__ == '__main__':
-    game_n: int = 4 # n in a row required to win
-    width: int = 7  # width of the board
-    height: int = 6 # height of the board
+    game_n: int = 5 # n in a row required to win
+    width: int = 8  # width of the board
+    height: int = 8 # height of the board
 
     # Check whether the game_n is possible
     assert 1 < game_n <= min(width, height), 'game_n is not possible'

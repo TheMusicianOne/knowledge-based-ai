@@ -119,19 +119,20 @@ class Board:
             
         return Board(state)
     
-    def create_game_tree(self,new_board, depth:int, player_id:int) -> dict: 
-        game_tree: dict = {}
+    def create_game_tree(self, depth:int, player_id:int) -> dict: 
+        game_tree = {}
         
         if depth == 0:
             return game_tree
         
-        for col in range(new_board.width):
-            if new_board.is_valid(col):
-                new_board = new_board.get_new_board(col, player_id)
-                
-                next_player = 2 if player_id == 1 else 1
-                game_tree[col] = (new_board,new_board.create_game_tree(new_board, (depth - 1), next_player))
-        
+        next_player = 2 if player_id == 1 else 1
+
+        for col in range(self.width):
+            if self.is_valid(col):
+                child = self.get_new_board(col, player_id)
+                subtree = child.create_game_tree(depth - 1, next_player)        
+                game_tree[col] = (child,subtree)
+
         return game_tree
     
 

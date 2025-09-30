@@ -1,6 +1,7 @@
 venv/
-pyenv.conf
+pyenv.cfg
 bin/
 lib/
+lig64/
 aipt-assignments/KBAI_Example_report.pdf
-README.md
+*.zip

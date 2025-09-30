@@ -100,49 +100,44 @@ class MinMaxPlayer(PlayerController):
         # Your assignment is to create a data structure (tree) to store the gameboards such that you can evaluate a higher depths.
         # Then, use the minmax algorithm to search through this tree to find the best move/action to take!
 
-
-
-        tree = board.create_game_tree(board,self.depth,self.player_id)
-        cur_depth = self.depth
-        
+        tree = board.create_game_tree(self.depth,self.player_id)
         best_move,best_value= self.minimax(tree,self.player_id,self.player_id)
         return best_move
     
     def minimax(self,game_tree: dict, player_id: int, current_player: int) -> tuple[int, int]:
         """
         Recursively performs Minimax search, alternating turns by player_id.
-
         Args:
             game_tree (dict): {col: (board, subtree)}
             player_id (int): the player whose best move we are computing
             heuristic (Heuristic): heuristic function
             current_player (int): player at the current node (1 or 2)
-
         Returns:
             tuple[int, int]: (best_move, best_value)
         """
-        if not game_tree:
-            # Leaf node, evaluate board from player_id perspective
-            return -1, 0  # placeholder move; value will be computed in parent
-
         best_move = -1
         if current_player == player_id:
-            # Maximizing node
+            # Maximizing player
             best_value = -np.inf
             for col, (board, subtree) in game_tree.items():
-                value = self.heuristic.evaluate_board(player_id, board) if not subtree else self.minimax(subtree, player_id, 2 if current_player == 1 else 1)[1]
+                if not subtree:  # leaf
+                    value = self.heuristic.evaluate_board(player_id, board)
+                else:  # recurse
+                    next_player = 2 if current_player == 1 else 1
+                    value = self.minimax(subtree, player_id, next_player)[1]
                 if value > best_value:
-                    best_value = value
-                    best_move = col
+                    best_value, best_move = value, col
         else:
-            # Minimizing node
+            # Minimizing player
             best_value = np.inf
-            next_player = 2 if current_player == 1 else 1
             for col, (board, subtree) in game_tree.items():
-                value = self.heuristic.evaluate_board(player_id, board) if not subtree else self.minimax(subtree, player_id, next_player)[1]
+                if not subtree:  # leaf
+                    value = self.heuristic.evaluate_board(player_id, board)
+                else:  # recurse
+                    next_player = 2 if current_player == 1 else 1
+                    value = self.minimax(subtree, player_id, next_player)[1]
                 if value < best_value:
-                    best_value = value
-                    best_move = col
+                    best_value, best_move = value, col
 
         return best_move, best_value
 
@@ -173,7 +168,7 @@ class AlphaBetaPlayer(PlayerController):
         """
 
         
-        tree = board.create_game_tree(board,self.depth,self.player_id)
+        tree = board.create_game_tree(self.depth,self.player_id)
         cur_depth = self.depth
         alpha = -np.inf
         beta = np.inf
@@ -182,48 +177,42 @@ class AlphaBetaPlayer(PlayerController):
         return best_move
 
     def a_b_pruning(self,game_tree: dict, player_id: int, current_player: int,alpha:float,beta:float) -> tuple[int, int]:
-        """
-        Recursively performs Minimax search, alternating turns by player_id.
-
-        Args:
-            game_tree (dict): {col: (board, subtree)}
-            player_id (int): the player whose best move we are computing
-            heuristic (Heuristic): heuristic function
-            current_player (int): player at the current node (1 or 2)
-
-        Returns:
-            tuple[int, int]: (best_move, best_value)
-        """
-        if not game_tree:
-            # Leaf node, evaluate board from player_id perspective
-            return -1, 0  # placeholder move; value will be computed in parent
 
         best_move = -1
+
         if current_player == player_id:
-            # Maximizing node
+            # Maximizing player
             best_value = -np.inf
             for col, (board, subtree) in game_tree.items():
-                value = self.heuristic.evaluate_board(player_id, board) if not subtree else self.a_b_pruning(subtree, player_id, 2 if current_player == 1 else 1,alpha,beta)[1]
+                if not subtree:  # leaf
+                    value = self.heuristic.evaluate_board(player_id, board)
+                else:
+                    next_player = 2 if current_player == 1 else 1
+                    value = self.a_b_pruning(subtree, player_id, next_player, alpha, beta)[1]
                 if value > best_value:
-                    best_value = value
-                    best_move = col
-                alpha = max(best_value,alpha)
-                if alpha>=beta:
-                    break
+                    best_value, best_move = value, col
+                alpha = max(alpha, best_value)
+                if alpha >= beta:
+                    break  # prune
         else:
-            # Minimizing node
+            # Minimizing player
             best_value = np.inf
-            next_player = 2 if current_player == 1 else 1
             for col, (board, subtree) in game_tree.items():
-                value = self.heuristic.evaluate_board(player_id, board) if not subtree else self.a_b_pruning(subtree, player_id, next_player,alpha,beta)[1]
+                if not subtree:  # leaf
+                    value = self.heuristic.evaluate_board(player_id, board)
+                else:
+                    next_player = 2 if current_player == 1 else 1
+                    value = self.a_b_pruning(subtree, player_id, next_player, alpha, beta)[1]
                 if value < best_value:
-                    best_value = value
-                    best_move = col
-                beta = min(best_value,beta)
+                    best_value, best_move = value, col
+                beta = min(beta, best_value)
                 if beta <= alpha:
-                    break
+                    break  # prune
 
         return best_move, best_value
+    
+
+
 class HumanPlayer(PlayerController):
     """Class for the human player
     Inherits from Playercontroller
